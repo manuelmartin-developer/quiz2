@@ -12,8 +12,6 @@ for (let i = 0; i < localStorage.length; i++) {
 
 if (document.title === "Home") {
 
-    console.log(dates);
-    console.log(scores);
     var ctx = document.getElementById('statsChart').getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'line',
@@ -44,9 +42,16 @@ if (document.title === "Home") {
         options: {
             scales: {
                 y: {
-                    beginAtZero: true,
-                    min: 0,
+                    type: 'number',
+                    min:0,
                     max: 10
+                },
+                x:{
+                    title: {
+                        color: 'red',
+                        display: true,
+                        text: 'Day'
+                      }
                 }
             }
         }
@@ -60,7 +65,6 @@ if (document.title === "Home") {
         let fetchQuestions = await fetch('https://opentdb.com/api.php?amount=50&type=multiple')
         let response = await fetchQuestions.json();
         let questions = response.results;
-        console.log(questions);
         /*******************  HOME PAGE *******************/
         const categories = document.querySelectorAll(".category");
         let currentCategory = "";

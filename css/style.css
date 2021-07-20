@@ -56,6 +56,7 @@ body{
 #statsChart{
 
     width: 90% !important;
+    animation: slidein 3s ;
   
 }
 .categories{
@@ -64,6 +65,7 @@ body{
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    animation: slidein 3s ;
 }
 .category{
     
@@ -105,6 +107,7 @@ body{
     display: flex;
     align-items: center;
     justify-content: center;
+    animation: slidein 3s ;
 }
 
 
@@ -161,4 +164,86 @@ body{
 }
 #anotheTry:visited{
     color: #f4f1de;
+}
+
+/* ANIMATIONS */
+@keyframes showup {
+    0% {opacity:0;}
+    20% {opacity:1;}
+    80% {opacity:1;}
+    100% {opacity:0;}
+}
+
+@keyframes slidein {
+    0% { margin-left:-5000px; }
+    20% { margin-left:-500px; }
+    35% { margin-left:0px; }
+    100% { margin-left:0px; }
+}
+
+@keyframes reveal {
+    0% {opacity:0;width:0px;}
+    20% {opacity:1;width:0px;}
+    30% {width:100%;}
+    80% {opacity:1;}
+    100% {opacity:0;width:100%;}
+}
+
+/******************** MEDIA QUERIES *************/
+
+@media screen and (min-device-width: 600px) and (max-device-width: 1023px) {
+        
+ .welcome{
+     flex-direction: row;
+    justify-content: space-evenly;
+ }
+ .categories{
+     flex-direction: column;
+    }
+    .category{
+        width: 18vw;
+        
+ }
+
+ #statsChart{
+
+    width: 80% !important;
+    max-height: 90%;
+
+  
+}
+.results h1{
+    font-size: 2rem;
+}
+   
+   
+}
+
+@media screen and (min-device-width: 1024px){
+    
+    .welcome{
+        flex-direction: column;
+       justify-content: space-evenly;
+       
+    }
+
+    .categories{
+        flex-direction: column;
+    
+        
+    }
+    .category{
+        width: 30vw;
+        
+    }
+    #statsChart{
+
+        width: 70% !important;
+        max-height: 80%;
+    
+      
+    }
+    .results h1{
+        font-size: 2rem;
+    }
 }
