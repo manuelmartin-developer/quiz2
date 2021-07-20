@@ -40,12 +40,12 @@ if (document.title === "Home") {
             }]
         },
         options: {
+            responsive: true,
             scales: {
                 y: {
-                    type: 'number',
-                    min:0,
-                    max: 10
-                },
+                    min: 0,
+                    max: 10,
+                  },
                 x:{
                     title: {
                         color: 'red',
@@ -197,6 +197,14 @@ if (document.title === "Home") {
     }
 
 })();
+
+
+
+
+
+
+
+
 
 const setTryScore = () => {
 
