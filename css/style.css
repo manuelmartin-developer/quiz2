@@ -21,8 +21,15 @@ body{
 .header h1{
     align-self: center;
     margin-left: 5%;
-    color: #f4f1de;
     
+}
+.header h1 a {
+    text-decoration: none;
+    color: #f4f1de;
+}
+.buttonsHead{
+    display: flex;
+    flex-direction: row;
 }
 
 .section{
@@ -58,7 +65,7 @@ body{
 #statsChart{
 
     width: 90% !important;
-    animation: slidein 3s ;
+    animation: slidein 4s ;
   
 }
 .categories{
@@ -67,7 +74,7 @@ body{
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    animation: slidein 3s ;
+    animation: slidein 4s ;
 }
 .category{
     
@@ -109,7 +116,7 @@ body{
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: slidein 3s ;
+    animation: slidein 2s ;
 }
 
 
@@ -170,15 +177,6 @@ body{
 
 
 
-
-
-
-
-
-
-
-
-
 /* ANIMATIONS */
 @keyframes showup {
     0% {opacity:0;}
@@ -189,7 +187,7 @@ body{
 
 @keyframes slidein {
     0% { margin-left:-5000px; }
-    20% { margin-left:-500px; }
+    20% { margin-left:-5000px; }
     35% { margin-left:0px; }
     100% { margin-left:0px; }
 }

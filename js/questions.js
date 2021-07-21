@@ -1,62 +1,3 @@
-
-/**********************  STATS CHART *********************/
-const dates = [];
-const scores = [];
-for (let i = 0; i < localStorage.length; i++) {
-    let key = localStorage.key(i);
-    let value = localStorage.getItem(key);
-    dates.push(key);
-    scores.push(value);
-}
-
-
-if (document.title === "Home") {
-
-    var ctx = document.getElementById('statsChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: dates,
-            datasets: [{
-                label: 'Score',
-                data: scores,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64,1 )'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    min: 0,
-                    max: 10,
-                  },
-                x:{
-                    title: {
-                        color: 'red',
-                        display: true,
-                        text: 'Day'
-                      }
-                }
-            }
-        }
-    });
-}
 /***********************************************************/
 (async () => {
 
@@ -65,25 +6,7 @@ if (document.title === "Home") {
         let fetchQuestions = await fetch('https://opentdb.com/api.php?amount=50&type=multiple')
         let response = await fetchQuestions.json();
         let questions = response.results;
-        /*******************  HOME PAGE *******************/
-        const categories = document.querySelectorAll(".category");
-        let currentCategory = "";
 
-        // Adding category at sessionStorage
-
-        categories.forEach(category => {
-            category.addEventListener("click", () => {
-                currentCategory = category.title;
-                setCategory();
-            });
-        });
-
-        function setCategory() {
-            const ssPermitted = sessionStorage.setItem("category", currentCategory);
-            const ssForbidden = console.log("Tu browser no acepta webStorage :(");
-            typeof (Storage) !== undefined ? ssPermitted : ssForbidden;
-
-        };
         /*******************  SET SCORE *******************/
 
         const setScore = () => {
@@ -98,7 +21,7 @@ if (document.title === "Home") {
             typeof (Storage) !== undefined ? ssPermitted() : ssForbidden();
         };
 
-        /*******************  QUESTIONS *******************/
+        //         /*******************  QUESTIONS *******************/
         // Check number of Question
 
         const checkNumberQuestion = () => {
@@ -139,9 +62,9 @@ if (document.title === "Home") {
             allAnswers = allAnswers.sort(() => Math.random() - 0.5);
 
             // Painting Question in HTML
-            if (document.title == "Quiz") {
-                question.innerHTML = currentQuestion;
-            };
+
+            question.innerHTML = currentQuestion;
+
 
             // Painting Answers in HTML
 
@@ -190,46 +113,9 @@ if (document.title === "Home") {
 
         };
         paintQuestion();
-        setTryScore();
 
     } catch (error) {
         console.log(`Error: ${error}`);
     }
 
 })();
-
-
-// Get the modal
-var modal = document.getElementById('id01');
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
-
-
-
-
-
-
-const setTryScore = () => {
-
-    if (document.title == "Results") {
-
-        
-        // Setting score
-        let sessionScore = sessionStorage.getItem("tryScore");
-        
-        let scoreTitle = document.querySelector("#sessionScore");
-        scoreTitle.innerHTML = `${sessionScore}/10`
-        let today = new Date();
-        let date = today.getDate() + '-' + (today.getMonth() + 1)
-        localStorage.setItem(date, sessionScore);
-        sessionStorage.clear();
-    }
-
-};
-
-
