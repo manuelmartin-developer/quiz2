@@ -26,10 +26,13 @@ input[type=email], input[type=password] {
     align-self: center;
     font-weight: bold;
   }
-  #signUpHead, #signInHead{
-    width: auto;
+  #signUpHead, #signInHead, #logOutHead{
+    width: 30vw;
 
 
+  }
+  #logOutHead{
+    display: none;
   }
 
   button:hover {
@@ -37,9 +40,17 @@ input[type=email], input[type=password] {
   }
   
   .cancelbtn {
-    width: auto;
+    width: 100%;
     padding: 10px 18px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     background-color: #e07a5f;
+  }
+  #alert{
+    color: #f4f1de;
+    font-size: 0.8rem;
+    font-weight: bold;
+    align-items: center;
   }
   
   .container {
@@ -66,8 +77,14 @@ input[type=email], input[type=password] {
   }
   
   
-  .modal-content {
+  .modal-signup{
     background-color: #277DA1;
+    margin: 5% auto 15% auto;
+    border-radius: 15px;
+    width: 90%;
+  }
+  .modal-signin{
+    background-color: #f2cc8f;
     margin: 5% auto 15% auto;
     border-radius: 15px;
     width: 90%;
@@ -114,7 +131,7 @@ input[type=email], input[type=password] {
   }
   @media screen and (min-device-width: 600px)  {
         
-    .modal-content {
+    .modal-signup, .modal-signin {
 
       width: 40%;
     }

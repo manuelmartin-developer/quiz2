@@ -257,5 +257,12 @@ body{
     .results h1{
         font-size: 2rem;
     }
+    .question{
+        font-size: 2rem;
+        padding: 5%;
+    }
+    .answer{
+        font-size: 2rem;
+    }
    
 }

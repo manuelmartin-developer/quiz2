@@ -16,20 +16,33 @@
         <div class="buttonsHead">
             <button id="signUpHead">Sign Up</button>
             <button id="signInHead">Sign In</button>
+            <button id="logOutHead">Log Out</button>
         </div>
-        <div id="login" class="modal">
-            <form class="modal-content animate" action="#" autocomplete="off">
+        <div id="signup" class="modal">
+            <div class="modal-signup animate">
                 <div class="container">
                     <label for="umail"><b>Email</b></label>
-                    <input type="email" placeholder="Enter mail" name="umail" id="umail" required>
+                    <input type="email" placeholder="Enter mail" name="umail" id="umail">
                     <label for="psw"><b>Password</b></label>
-                    <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
-                    <button type="submit" class="loginbtn">Login</button>
+                    <input type="password" placeholder="Enter Password" name="psw" id="psw">
+                    <button type="button" class="signupbtn">Sign Up</button>
+                    <button type="button" class="cancelbtn cancelSignUp">Cancel</button>
+                    <label id="alert"></label>
                 </div>
+            </div>
+        </div>
+        <div id="login" class="modal">
+            <div class="modal-signin animate">
                 <div class="container">
-                    <button type="button" class="cancelbtn">Cancel</button>
+                    <label for="umail"><b>Email</b></label>
+                    <input type="email" placeholder="Enter mail" name="umail" id="loginmail">
+                    <label for="psw"><b>Password</b></label>
+                    <input type="password" placeholder="Enter Password" name="psw" id="loginpsw">
+                    <button type="button" class="loginbtn">Sign In</button>
+                    <button type="button" class="cancelbtn cancelSignIn">Cancel</button>
+                    <label id="alertLogin"></label>
                 </div>
-            </form>
+            </div>
         </div>
     </header>
     <section class="section">

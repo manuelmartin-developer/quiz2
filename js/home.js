@@ -1,5 +1,5 @@
 // Your web app's Firebase configuration
-var firebaseConfig = {
+let firebaseConfig = {
     apiKey: "AIzaSyD0JUkcZ1Mc_4Zosd5NEovRGIRb8kazqhU",
     authDomain: "quiz-40bb7.firebaseapp.com",
     projectId: "quiz-40bb7",
@@ -7,20 +7,46 @@ var firebaseConfig = {
     messagingSenderId: "807178413256",
     appId: "1:807178413256:web:da86fc8f061577a2bcb1fd"
 };
-// Initialize Firebase
+// Init Firebase
 firebase.initializeApp(firebaseConfig);
-// Inicializa Base de datos
+// Init Data Base
 let db = firebase.firestore();
 
-/**********************  STATS CHART *********************/
-const dates = [];
-const scores = [];
-for (let i = 0; i < localStorage.length; i++) {
-    let key = localStorage.key(i);
-    let value = localStorage.getItem(key);
-    dates.push(key);
-    scores.push(value);
+//Cheking if user is already logged in
+let loggedUser = sessionStorage.getItem("user");
+
+let signInHead = document.querySelector("#signInHead");
+let signUpBtn = document.querySelector('#signUpHead');
+let logOutBtn = document.querySelector('#logOutHead');
+
+if(loggedUser){
+    signInHead.style.display = 'none';
+    signUpHead.style.display = 'none';
+    logOutBtn.style.display = 'block';
 }
+// Getting the scores from firebase
+let userLogged = sessionStorage.getItem("user");
+console.log(userLogged);
+let dates = [];
+let firebaseScores = [];
+
+if(userLogged != null){
+    db
+        .collection("users").where("email", "==", userLogged)
+        .get()
+        .then((querySnapshot) => {
+            let user = querySnapshot.docs[0];
+            let scores = user.data().scores;
+            for (let score of scores){
+                dates.push(Object.keys(score));
+                firebaseScores.push(parseInt(Object.values(score)));
+            };
+          
+        });
+}
+    console.log(dates);
+    console.log(firebaseScores);
+/**********************  STATS CHART *********************/
 
 var ctx = document.getElementById('statsChart').getContext('2d');
 var myChart = new Chart(ctx, {
@@ -29,7 +55,7 @@ var myChart = new Chart(ctx, {
         labels: dates,
         datasets: [{
             label: 'Score',
-            data: scores,
+            data: firebaseScores,
             backgroundColor: [
                 'rgba(255, 99, 132, 1)',
                 'rgba(54, 162, 235, 1)',
@@ -52,17 +78,7 @@ var myChart = new Chart(ctx, {
     options: {
         responsive: true,
         scales: {
-            y: {
-                min: 0,
-                max: 10,
-            },
-            x: {
-                title: {
-                    color: 'red',
-                    display: true,
-                    text: 'Day'
-                }
-            }
+          
         }
     }
 });
@@ -92,41 +108,64 @@ function setCategory() {
 
 /*******************  LOGIN MODAL *********************/
 // Get the modal
-let modal = document.getElementById('login');
-let signUpHead = document.getElementById('signUpHead');
-signUpHead.addEventListener(("click"), () => {
-    modal.style.display = 'block'
+let modalSignUp = document.getElementById('signup');
+signUpBtn.addEventListener(("click"), () => {
+    modalSignUp.style.display = 'block'
+
+});
+let modalSignIn = document.getElementById('login');
+let signInBtn = document.getElementById('signInHead');
+signInBtn.addEventListener(("click"), () => {
+    modalSignIn.style.display = 'block'
 
 });
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function (event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
+    if (event.target == modalSignUp) {
+        modalSignUp.style.display = "none";
+    } else if (event.target == modalSignIn) {
+        modalSignIn.style.display = "none";
+    };
 }
-//Cancel button
-let cancelBtn = document.querySelector(".cancelbtn");
-cancelBtn.addEventListener("click", () => {
-    document.getElementById('login').style.display = 'none'
+//Cancel buttons
+let cancelBtnSu = document.querySelector(".cancelSignUp");
+cancelBtnSu.addEventListener("click", () => {
+    modalSignUp.style.display = 'none'
+});
+let cancelBtnSi = document.querySelector(".cancelSignIn");
+cancelBtnSi.addEventListener("click", () => {
+    modalSignIn.style.display = 'none'
 });
 
-let loginBtn = document.querySelector(".loginbtn");
-loginBtn.addEventListener("click", () => {
+
+//Sign Up Button
+let signupBtn = document.querySelector(".signupbtn");
+signupBtn.addEventListener("click", () => {
     signUp();
+});
+//Sign In Button
+let loginBtn = document.querySelector(".loginbtn");
+
+loginBtn.addEventListener("click", () => {
+    signIn();
+});
+
+// Log out button
+logOutBtn.addEventListener("click", () => {
+    logOut();
 });
 
 /************************* FIREBASE DATABASE **********************/
 
-
-
-// Anade coleccion a la base de datos
+// Add a user to db
 const createUser = (email, password) => {
     db
         .collection("users")
         .add({
             email: email,
-            password: password
+            password: password,
+            scores:{}
         })
         .then((docRef) => {
             console.log("Document written with ID: ", docRef.id);
@@ -136,29 +175,158 @@ const createUser = (email, password) => {
         });
 };
 
-// Regitra a un usuario en
+// Authenticate an user
 const signUp = () => {
     let umail = document.querySelector("#umail");
     let umailText = umail.value;
     let psw = document.querySelector("#psw");
     let pswText = psw.value;
+    let alerts = document.querySelector("#alert");
+    let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 
-    firebase.auth()
-        .createUserWithEmailAndPassword(umailText, pswText)
-        .then((userCredential) => {
-            // Directamente creamos el usuario y lo almacenamos en FireStore
-            createUser(umailText, pswText);
-        })
-        .catch((error) => {
-            let errorCode = error.code;
-            console.log(errorCode);
-            if (errorCode == "auth/email-already-in-use") {
+    if (umailText.length == 0 || pswText.length == 0) {
+        umail.style.backgroundColor = "#f2cc8f";
+        psw.style.backgroundColor = "#f2cc8f";
+        alerts.innerHTML = 'You must fill in two inputs';
+
+    } else if (!umailText.match(regexEmail) && pswText.length < 6) {
+        umail.style.backgroundColor = "#e07a5f";
+        psw.style.backgroundColor = "#e07a5f";
+        alerts.innerHTML = `Email is not valid
+        Password must be min 6 characters`;
+    } else if (!umailText.match(regexEmail)) {
+        umail.style.backgroundColor = "#e07a5f";
+        alerts.innerHTML = 'Email is not valid';
+        psw.style.backgroundColor = "#f4f1de";
+
+    } else if (pswText.length < 6) {
+        psw.style.backgroundColor = "#e07a5f";
+        alerts.innerHTML = 'Password must be min 6 characters';
+        umail.style.backgroundColor = "#f4f1de";
+
+    } else if (umailText.match(regexEmail) && pswText.length > 6) {
+        umail.style.backgroundColor = "#81b29a";
+        psw.style.backgroundColor = "#81b29a";
+        alerts.innerHTML = '';
+
+        firebase.auth()
+            .createUserWithEmailAndPassword(umailText, pswText)
+            .then((userCredential) => {
+                createUser(umailText, pswText);
+                document.getElementById('signup').style.display = 'none'
+                signupBtn.style.display = 'none';
+
+            })
+            .catch((error) => {
                 umail.style.backgroundColor = "#e07a5f";
-                umail.value = "The email is already in use";
-            } else if (errorCode == "auth/weak-password") {
-                psw.style.backgroundColor = "#e07a5f";
-                umail.value = "Password min length six characters";
-            }
+                alerts.innerHTML = error.code;
+            });
 
-        });
+    }
 };
+
+const signIn = () => {
+    let umail = document.querySelector("#loginmail");
+    let umailText = umail.value;
+    let psw = document.querySelector("#loginpsw");
+    let pswText = psw.value;
+    let alerts = document.querySelector("#alertLogin");
+    let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+
+    if (umailText.length == 0 || pswText.length == 0) {
+        umail.style.backgroundColor = "#e07a5f";
+        psw.style.backgroundColor = "#e07a5f";
+        alerts.innerHTML = 'You must fill in two inputs';
+
+    } else if (!umailText.match(regexEmail) && pswText.length < 6) {
+        umail.style.backgroundColor = "#e07a5f";
+        psw.style.backgroundColor = "#e07a5f";
+        alerts.innerHTML = `Email is not valid
+        Password must be min 6 characters`;
+    } else if (!umailText.match(regexEmail)) {
+        umail.style.backgroundColor = "#e07a5f";
+        alerts.innerHTML = 'Email is not valid';
+        psw.style.backgroundColor = "#f4f1de";
+
+    } else if (pswText.length < 6) {
+        psw.style.backgroundColor = "#e07a5f";
+        alerts.innerHTML = 'Password must be min 6 characters';
+        umail.style.backgroundColor = "#f4f1de";
+
+    } else if (umailText.match(regexEmail) && pswText.length > 6) {
+        umail.style.backgroundColor = "#f4f1de";
+        psw.style.backgroundColor = "#f4f1de";
+        alerts.innerHTML = '';
+
+
+                firebase.auth().signInWithEmailAndPassword(umailText, pswText)
+                    .then((userCredential) => {
+
+                        let user = userCredential.user.email;
+                        sessionStorage.setItem("user", user);
+
+                        document.getElementById('login').style.display = 'none'
+                        signUpHead.style.display = 'none';
+                        signInHead.style.display = 'none';
+                        logOutBtn.style.display = 'block';
+
+                    })
+                    .catch((error) => {
+                        let errorCode = error.code;
+                        if (errorCode == 'auth/user-not-found') {
+                            umail.style.backgroundColor = "#e07a5f";
+                            alerts.innerHTML = 'This email is not registered';
+
+                        } else if (errorCode == 'auth/wrong-password') {
+
+                            psw.style.backgroundColor = "#e07a5f";
+                            alerts.innerHTML = 'The password is invalid';
+                        }
+                    });
+
+
+
+            
+        firebase.auth().signInWithEmailAndPassword(umailText, pswText)
+            .then((userCredential) => {
+
+                let user = userCredential.user;
+                document.getElementById('login').style.display = 'none'
+                signUpHead.style.display = 'none';
+                signInHead.style.display = 'none';
+                logOutBtn.style.display = 'block';
+
+            })
+            .catch((error) => {
+                let errorCode = error.code;
+                if (errorCode == 'auth/user-not-found') {
+                    umail.style.backgroundColor = "#e07a5f";
+                    alerts.innerHTML = 'This email is not registered';
+
+                } else if (errorCode == 'auth/wrong-password') {
+
+                    psw.style.backgroundColor = "#e07a5f";
+                    alerts.innerHTML = 'The password is invalid';
+                }
+            });
+    }
+
+};
+
+const logOut = () => {
+    let user = firebase.auth().currentUser;
+    firebase.auth().signOut().then(() => {
+        logOutBtn.style.display = 'none';
+        signUpHead.style.display = 'block';
+        signInHead.style.display = 'block';
+        sessionStorage.clear();
+
+    }).catch((error) => {
+        // An error happened.
+    });
+};
+
+
+// Meter puntuaciones en firebase
+// Leer puntuaciones de firebase para chart
+//Chin pun!
