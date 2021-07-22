@@ -13,8 +13,11 @@ let db = firebase.firestore();
 
 
 // Session Storage
+let sessionScore = 0;
+if(sessionStorage.getItem("tryScore") != null){
+   sessionScore = sessionStorage.getItem("tryScore");
+};
 
-let sessionScore = sessionStorage.getItem("tryScore");
 let userLogged = sessionStorage.getItem("user");
 let scoreTitle = document.querySelector("#sessionScore");
 scoreTitle.innerHTML = `${sessionScore}/10`

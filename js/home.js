@@ -19,69 +19,74 @@ let signInHead = document.querySelector("#signInHead");
 let signUpBtn = document.querySelector('#signUpHead');
 let logOutBtn = document.querySelector('#logOutHead');
 
-if(loggedUser){
+if (loggedUser) {
     signInHead.style.display = 'none';
     signUpHead.style.display = 'none';
     logOutBtn.style.display = 'block';
 }
 // Getting the scores from firebase
 let userLogged = sessionStorage.getItem("user");
-console.log(userLogged);
-let dates = [];
-let firebaseScores = [];
+let labelStats = document.querySelector("#labelStats");
 
-if(userLogged != null){
+if (userLogged != null) {
     db
         .collection("users").where("email", "==", userLogged)
         .get()
         .then((querySnapshot) => {
             let user = querySnapshot.docs[0];
             let scores = user.data().scores;
-            for (let score of scores){
+            let dates = [];
+            let firebaseScores = [];
+            for (let score of scores) {
                 dates.push(Object.keys(score));
                 firebaseScores.push(parseInt(Object.values(score)));
             };
-          
+
+
+            /**********************  STATS CHART *********************/
+
+            var ctx = document.getElementById('statsChart');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Scores',
+                        data: firebaseScores,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            min: 0,
+                            max: 10
+                        }
+                    }
+                }
+            });
+
         });
 }
-    console.log(dates);
-    console.log(firebaseScores);
-/**********************  STATS CHART *********************/
 
-var ctx = document.getElementById('statsChart').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: dates,
-        datasets: [{
-            label: 'Score',
-            data: firebaseScores,
-            backgroundColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64,1 )'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        responsive: true,
-        scales: {
-          
-        }
-    }
-});
+
 
 
 /*******************  HOME PAGE *******************/
@@ -165,7 +170,7 @@ const createUser = (email, password) => {
         .add({
             email: email,
             password: password,
-            scores:{}
+            scores: {}
         })
         .then((docRef) => {
             console.log("Document written with ID: ", docRef.id);
@@ -259,34 +264,35 @@ const signIn = () => {
         alerts.innerHTML = '';
 
 
-                firebase.auth().signInWithEmailAndPassword(umailText, pswText)
-                    .then((userCredential) => {
+        firebase.auth().signInWithEmailAndPassword(umailText, pswText)
+            .then((userCredential) => {
 
-                        let user = userCredential.user.email;
-                        sessionStorage.setItem("user", user);
+                let user = userCredential.user.email;
+                sessionStorage.setItem("user", user);
 
-                        document.getElementById('login').style.display = 'none'
-                        signUpHead.style.display = 'none';
-                        signInHead.style.display = 'none';
-                        logOutBtn.style.display = 'block';
+                document.getElementById('login').style.display = 'none'
+                signUpHead.style.display = 'none';
+                signInHead.style.display = 'none';
+                logOutBtn.style.display = 'block';
+                
 
-                    })
-                    .catch((error) => {
-                        let errorCode = error.code;
-                        if (errorCode == 'auth/user-not-found') {
-                            umail.style.backgroundColor = "#e07a5f";
-                            alerts.innerHTML = 'This email is not registered';
+            })
+            .catch((error) => {
+                let errorCode = error.code;
+                if (errorCode == 'auth/user-not-found') {
+                    umail.style.backgroundColor = "#e07a5f";
+                    alerts.innerHTML = 'This email is not registered';
 
-                        } else if (errorCode == 'auth/wrong-password') {
+                } else if (errorCode == 'auth/wrong-password') {
 
-                            psw.style.backgroundColor = "#e07a5f";
-                            alerts.innerHTML = 'The password is invalid';
-                        }
-                    });
+                    psw.style.backgroundColor = "#e07a5f";
+                    alerts.innerHTML = 'The password is invalid';
+                }
+            });
 
 
 
-            
+
         firebase.auth().signInWithEmailAndPassword(umailText, pswText)
             .then((userCredential) => {
 
@@ -295,6 +301,8 @@ const signIn = () => {
                 signUpHead.style.display = 'none';
                 signInHead.style.display = 'none';
                 logOutBtn.style.display = 'block';
+                labelStats.style.visibility = "hidden";
+                location.reload();
 
             })
             .catch((error) => {
@@ -320,6 +328,8 @@ const logOut = () => {
         signUpHead.style.display = 'block';
         signInHead.style.display = 'block';
         sessionStorage.clear();
+        labelStats.style.visibility = "visible";
+        location.reload();
 
     }).catch((error) => {
         // An error happened.
