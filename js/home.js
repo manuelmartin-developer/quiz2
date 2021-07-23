@@ -74,6 +74,7 @@ if (userLogged != null) {
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: true,
                     scales: {
                         y: {
                             min: 0,
@@ -170,7 +171,7 @@ const createUser = (email, password) => {
         .add({
             email: email,
             password: password,
-            scores: {}
+            scores: []
         })
         .then((docRef) => {
             console.log("Document written with ID: ", docRef.id);
@@ -263,45 +264,17 @@ const signIn = () => {
         psw.style.backgroundColor = "#f4f1de";
         alerts.innerHTML = '';
 
-
         firebase.auth().signInWithEmailAndPassword(umailText, pswText)
             .then((userCredential) => {
 
                 let user = userCredential.user.email;
+                console.log(user);
                 sessionStorage.setItem("user", user);
-
                 document.getElementById('login').style.display = 'none'
                 signUpHead.style.display = 'none';
                 signInHead.style.display = 'none';
                 logOutBtn.style.display = 'block';
-                
-
-            })
-            .catch((error) => {
-                let errorCode = error.code;
-                if (errorCode == 'auth/user-not-found') {
-                    umail.style.backgroundColor = "#e07a5f";
-                    alerts.innerHTML = 'This email is not registered';
-
-                } else if (errorCode == 'auth/wrong-password') {
-
-                    psw.style.backgroundColor = "#e07a5f";
-                    alerts.innerHTML = 'The password is invalid';
-                }
-            });
-
-
-
-
-        firebase.auth().signInWithEmailAndPassword(umailText, pswText)
-            .then((userCredential) => {
-
-                let user = userCredential.user;
-                document.getElementById('login').style.display = 'none'
-                signUpHead.style.display = 'none';
-                signInHead.style.display = 'none';
-                logOutBtn.style.display = 'block';
-                labelStats.style.visibility = "hidden";
+                labelStats.style.visibility = 'hidden';
                 location.reload();
 
             })
@@ -328,15 +301,10 @@ const logOut = () => {
         signUpHead.style.display = 'block';
         signInHead.style.display = 'block';
         sessionStorage.clear();
-        labelStats.style.visibility = "visible";
+        labelStats.style.visibility = 'visible';
         location.reload();
 
     }).catch((error) => {
-        // An error happened.
+        console.log(`Error: ${error.code}`);
     });
 };
-
-
-// Meter puntuaciones en firebase
-// Leer puntuaciones de firebase para chart
-//Chin pun!

@@ -65,7 +65,6 @@
 
             question.innerHTML = currentQuestion;
 
-
             // Painting Answers in HTML
 
             for (let i = 0; i < answers.length; i++) {

@@ -36,10 +36,6 @@ db
             scores:
             firebase.firestore.FieldValue.arrayUnion({[date]: sessionScore})
         });
-        console.log(data);
-
-     
-
     })
     .catch((error) => {
         console.log("Error", error);

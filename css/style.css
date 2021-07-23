@@ -64,9 +64,13 @@ body{
 
 #statsChart{
 
-    width: 90% !important;
+    width: 80% !important;
+    height: 40%;
     animation: slidein 4s ;
   
+}
+#labelStats{
+    visibility: visible;
 }
 .categories{
     display: flex;
@@ -249,7 +253,7 @@ body{
     }
     #statsChart{
 
-        width: 70% !important;
+        width: 60% !important;
         max-height: 80%;
     
       
