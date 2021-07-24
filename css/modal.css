@@ -26,13 +26,12 @@ input[type=email], input[type=password] {
     align-self: center;
     font-weight: bold;
   }
-  #signUpHead, #signInHead, #logOutHead{
+  #signUpHead, #signInHead{
     width: 30vw;
-
-
   }
   #logOutHead{
     display: none;
+    width: 60vw;
   }
 
   button:hover {
@@ -130,9 +129,13 @@ input[type=email], input[type=password] {
     }
   }
   @media screen and (min-device-width: 600px)  {
-        
+    
     .modal-signup, .modal-signin {
-
+      
       width: 40%;
+    }
+    #logOutHead{
+  
+      width: 30vw;
     }
    }

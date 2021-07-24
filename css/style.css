@@ -44,7 +44,7 @@ body{
 
 }
 
-.welcome, .stats{
+.welcome, .chart-container{
     display: flex;
     flex-direction: column;
     height: 40vh;
@@ -58,20 +58,17 @@ body{
     background-color: #f4f1de;
 
 }
-.welcome:hover, #anotherTry:hover, .stats:hover, .category:hover, .answer:hover{
+.welcome:hover, #anotherTry:hover, .chart-container:hover, .category:hover, .answer:hover{
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;}
 
 
-#statsChart{
+.chart-container{
+    position: relative;
+    width: 80vw;
+    padding: 0px 10px;
+    font-size: 1.5rem;
+}
 
-    width: 80% !important;
-    height: 40%;
-    animation: slidein 4s ;
-  
-}
-#labelStats{
-    visibility: visible;
-}
 .categories{
     display: flex;
     flex-direction: row;
@@ -219,14 +216,13 @@ body{
         width: 18vw;
         
  }
-
- #statsChart{
-
-    width: 80% !important;
-    max-height: 90%;
-
-  
+.question{
+    font-size: 1.5rem;
 }
+.answer{
+    font-size: 1.5rem;
+}
+
 .results h1{
     font-size: 2rem;
 }
@@ -236,11 +232,14 @@ body{
 
 @media screen and (min-device-width: 1024px){
     
+
+    
     .welcome{
         flex-direction: column;
        justify-content: space-evenly;
        
     }
+
 
     .categories{
         flex-direction: column;
@@ -251,13 +250,7 @@ body{
         width: 30vw;
         
     }
-    #statsChart{
 
-        width: 60% !important;
-        max-height: 80%;
-    
-      
-    }
     .results h1{
         font-size: 2rem;
     }

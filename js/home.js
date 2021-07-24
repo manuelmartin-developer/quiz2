@@ -1,4 +1,4 @@
-// Your web app's Firebase configuration
+/*********************  FIREBASE CONFIG ***********************/
 let firebaseConfig = {
     apiKey: "AIzaSyD0JUkcZ1Mc_4Zosd5NEovRGIRb8kazqhU",
     authDomain: "quiz-40bb7.firebaseapp.com",
@@ -14,7 +14,6 @@ let db = firebase.firestore();
 
 //Cheking if user is already logged in
 let loggedUser = sessionStorage.getItem("user");
-
 let signInHead = document.querySelector("#signInHead");
 let signUpBtn = document.querySelector('#signUpHead');
 let logOutBtn = document.querySelector('#logOutHead');
@@ -22,11 +21,11 @@ let logOutBtn = document.querySelector('#logOutHead');
 if (loggedUser) {
     signInHead.style.display = 'none';
     signUpHead.style.display = 'none';
+    logOutBtn.innerHTML = `${loggedUser} (Log Out)`;
     logOutBtn.style.display = 'block';
 }
 // Getting the scores from firebase
 let userLogged = sessionStorage.getItem("user");
-let labelStats = document.querySelector("#labelStats");
 
 if (userLogged != null) {
     db
@@ -74,7 +73,7 @@ if (userLogged != null) {
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
                             min: 0,
@@ -85,10 +84,9 @@ if (userLogged != null) {
             });
 
         });
+}else {
+    document.querySelector(".chart-container").innerHTML = "Sign in to see your stats!";
 }
-
-
-
 
 /*******************  HOME PAGE *******************/
 const categories = document.querySelectorAll(".category");
@@ -103,22 +101,19 @@ categories.forEach(category => {
     });
 });
 
-function setCategory() {
+const setCategory = () => {
     const ssPermitted = sessionStorage.setItem("category", currentCategory);
     const ssForbidden = console.log("Tu browser no acepta webStorage :(");
     typeof (Storage) !== undefined ? ssPermitted : ssForbidden;
-
 };
 
-
-
 /*******************  LOGIN MODAL *********************/
-// Get the modal
+// Show modal
 let modalSignUp = document.getElementById('signup');
 signUpBtn.addEventListener(("click"), () => {
     modalSignUp.style.display = 'block'
-
 });
+
 let modalSignIn = document.getElementById('login');
 let signInBtn = document.getElementById('signInHead');
 signInBtn.addEventListener(("click"), () => {
@@ -224,13 +219,17 @@ const signUp = () => {
 
             })
             .catch((error) => {
-                umail.style.backgroundColor = "#e07a5f";
-                alerts.innerHTML = error.code;
+
+                if(error.code == "auth/email-already-in-use"){
+                    umail.style.backgroundColor = "#e07a5f";
+                    alerts.innerHTML = "Email already in use";
+                }
+                console.log(error.code);
             });
 
     }
 };
-
+// Sign in an existing user
 const signIn = () => {
     let umail = document.querySelector("#loginmail");
     let umailText = umail.value;
@@ -274,7 +273,8 @@ const signIn = () => {
                 signUpHead.style.display = 'none';
                 signInHead.style.display = 'none';
                 logOutBtn.style.display = 'block';
-                labelStats.style.visibility = 'hidden';
+                document.querySelector(".chart-container").innerHTML = "";
+
                 location.reload();
 
             })
@@ -293,15 +293,13 @@ const signIn = () => {
     }
 
 };
-
+// Log out an sign in user
 const logOut = () => {
-    let user = firebase.auth().currentUser;
     firebase.auth().signOut().then(() => {
         logOutBtn.style.display = 'none';
         signUpHead.style.display = 'block';
         signInHead.style.display = 'block';
         sessionStorage.clear();
-        labelStats.style.visibility = 'visible';
         location.reload();
 
     }).catch((error) => {
