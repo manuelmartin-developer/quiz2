@@ -31,13 +31,19 @@ body{
     display: flex;
     flex-direction: row;
 }
+#signUpHead, #signInHead{
+    width: 30vw;
+  }
+  #logOutHead{
+    display: none;
+    width: fit-content
+  }
 
 .section{
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     justify-content: space-around;
-    align-items: center;
     align-content: space-around;
     height: 90vh;
 
@@ -53,7 +59,6 @@ body{
     box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;    display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 10px;
     color: #577590;
     background-color: #f4f1de;
 
@@ -64,9 +69,8 @@ body{
 
 .chart-container{
     position: relative;
-    width: 80vw;
-    padding: 0px 10px;
     font-size: 1.5rem;
+    font-weight: bold;
 }
 
 .categories{
@@ -203,17 +207,36 @@ body{
 
 /******************** MEDIA QUERIES *************/
 
+
 @media screen and (min-device-width: 600px) and (max-device-width: 1023px) {
-        
- .welcome{
-     flex-direction: row;
+  
+.header{
+    height: 15vh;
+}
+.section{    
     justify-content: space-evenly;
+    align-content: space-around;
+    height: 85vh;
+}
+ .welcome{
+     flex-direction: column;
+    justify-content: space-evenly;
+    height: 37.5vh;
+}
+.chart-container{
+     height: 37.5vh;
+ }
+
+ #logOutHead{
+    
  }
  .categories{
-     flex-direction: column;
+     flex-direction: row;
+     flex-wrap: wrap;
     }
     .category{
         width: 18vw;
+        height: 10vh;
         
  }
 .question{
@@ -225,41 +248,29 @@ body{
 
 .results h1{
     font-size: 2rem;
-}
+}  
    
-   
 }
+
 
 @media screen and (min-device-width: 1024px){
     
 
-    
-    .welcome{
-        flex-direction: column;
-       justify-content: space-evenly;
-       
-    }
-
-
-    .categories{
-        flex-direction: column;
-    
-        
-    }
-    .category{
-        width: 30vw;
-        
+    #sessionScore{
+        margin: 0;
+        height: 600px;
+        width: 600px;
+        font-size: 15rem;
+        margin: 10% 0;
     }
 
     .results h1{
+        font-size: 5rem;
+
+    }
+    #anotherTry{
         font-size: 2rem;
     }
-    .question{
-        font-size: 2rem;
-        padding: 5%;
-    }
-    .answer{
-        font-size: 2rem;
-    }
+  
    
 }
